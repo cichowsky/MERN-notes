@@ -1,36 +1,52 @@
 const Note = require("../db/models/Note");
 
 class NoteController {
-  getAllNotes(req, res) {
-    res.send("Notes list");
+  async getAllNotes(req, res) {
+    const data = await Note.find({});
+
+    res.status(200).json(data);
   }
 
-  getNote(req, res) {
+  async getNote(req, res) {
     const { id } = req.params;
-    res.send(`Note ID: ${id}`);
+
+    const note = await Note.findOne({ _id: id });
+
+    res.status(200).json(note);
   }
 
-  saveNote(req, res) {
+  async saveNote(req, res) {
     const { title, body } = req.body;
-    console.log(title, body);
+    let newNote;
 
-    const newNote = new Note({
-      title: "Test note",
-      body: "Lorem ipsum dolor sit amet",
-    });
+    try {
+      newNote = new Note({ title, body });
+      await newNote.save();
+    } catch (error) {
+      return res.status(422).json({ message: error.message });
+    }
 
-    newNote.save();
-    res.send("Note saved");
+    res.status(201).json(newNote);
   }
 
-  updateNote(req, res) {
+  async updateNote(req, res) {
     const { id } = req.params;
-    res.send(`Note ID: ${id} updated`);
+    const { title, body } = req.body;
+
+    const note = await Note.findOne({ _id: id });
+    note.title = title;
+    note.body = body;
+    await note.save();
+
+    res.status(201).json(note);
   }
 
-  deleteNote(req, res) {
+  async deleteNote(req, res) {
     const { id } = req.params;
-    res.send(`Note ID: ${id} deleted`);
+
+    await Note.deleteOne({ _id: id });
+
+    res.status(204).send();
   }
 }
 
