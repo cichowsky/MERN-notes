@@ -1,7 +1,7 @@
 const NotesListView = () => {
   return (
     <div>
-      <h1>Notes list</h1>
+      <h1 className="text-2xl">Notes list</h1>
     </div>
   );
 };
