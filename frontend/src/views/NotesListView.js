@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import Note from 'components/Note/Note';
 import MainTemplate from 'components/templates/MainTemplate';
+import Note from 'components/Note/Note';
+import Button from 'components/Button/Button';
 
 const mockedNotes = [
   {
@@ -22,16 +23,11 @@ const NotesListView = () => {
     <MainTemplate title="Notes list">
       <div className="flex justify-between items-center mb-8">
         <p className="text-3xl font-semibold">Notes: {notes.length}</p>
-        <button
-          type="button"
-          className="text-lg font-semibold inline-flex bg-indigo-600 hover:bg-indigo-700 text-white rounded-full py-1 px-4 justify-center items-center"
-        >
-          + Add note
-        </button>
+        <Button isBig>+ Add note</Button>
       </div>
 
       {notes.map(({ id, title, body }) => (
-        <Note key={id} title={title} body={body} />
+        <Note key={id} title={title} body={body} isCard />
       ))}
     </MainTemplate>
   );

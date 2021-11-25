@@ -1,31 +1,40 @@
 import PropTypes from 'prop-types';
+import Button from 'components/Button/Button';
 
-const Note = ({ title, body }) => {
-  return (
+const Note = ({ title, body, isCard }) => {
+  return isCard ? (
     <div className="p-4 mb-4 bg-white shadow-md rounded-lg">
       <h2 className="text-gray-800 text-2xl font-semibold">{title}</h2>
       <p className="mt-2 mb-4 text-gray-600">{body}</p>
+
       <div className="flex justify-end gap-3">
-        <button
-          type="button"
-          className="inline-flex bg-purple-600 hover:bg-purple-700 text-white rounded-full py-1 px-4 justify-center items-center"
-        >
-          Edit
-        </button>
-        <button
-          type="button"
-          className="inline-flex bg-pink-600 hover:bg-pink-700 text-white rounded-full py-1 px-4 justify-center items-center"
-        >
-          Delete
-        </button>
+        <Button color="purple">Edit</Button>
+        <Button color="pink">Delete</Button>
       </div>
     </div>
+  ) : (
+    <>
+      <div className="pl-4 pt-1 pb-4 border-l-4 border-indigo-600 mb-8">
+        <h2 className="text-gray-800 text-4xl font-semibold">{title}</h2>
+        <p className="mt-4 text-xl text-gray-600">{body}</p>
+      </div>
+
+      <div className="flex gap-4">
+        <Button color="purple" isBig>
+          Edit note
+        </Button>
+        <Button color="pink" isBig>
+          Delete note
+        </Button>
+      </div>
+    </>
   );
 };
 
 Note.propTypes = {
   title: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
+  isCard: PropTypes.bool,
 };
 
 export default Note;
