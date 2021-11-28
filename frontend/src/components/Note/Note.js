@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import Button from 'components/Button/Button';
+import Button from 'components/UI/Button/Button';
 
 const Note = ({ title, body, isCard }) => {
   return isCard ? (
