@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import MainTemplate from 'components/templates/MainTemplate';
-import Note from 'components/Note/Note';
-import NoteForm from 'components/Note/NoteForm';
-import Button from 'components/UI/Button/Button';
+import Note from 'components/organisms/Note/Note';
+import NoteForm from 'components/organisms/Note/NoteForm';
+import Button from 'components/atoms/Button/Button';
 
 const mockedNotes = [
   {
@@ -26,7 +26,7 @@ const NotesListView = () => {
         <Button isBig>+ Add note</Button>
       </div>
       {notes.map(({ id, title, body }) => (
-        <Note key={id} title={title} body={body} isCard />
+        <Note key={id} id={id} title={title} body={body} isCard />
       ))}
       <br />
       <NoteForm />

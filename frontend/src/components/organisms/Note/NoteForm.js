@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import Input from 'components/UI/Input/Input';
-import Button from 'components/UI/Button/Button';
+import Input from 'components/atoms/Input/Input';
+import Button from 'components/atoms/Button/Button';
 
 const NoteForm = ({ editedNote }) => {
   const editedNoteId = editedNote?.id;

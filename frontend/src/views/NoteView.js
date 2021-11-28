@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import MainTemplate from 'components/templates/MainTemplate';
-import Note from 'components/Note/Note';
+import Note from 'components/organisms/Note/Note';
 
 const mockedNote = {
   id: 'askbndfsirvbfgadvds',

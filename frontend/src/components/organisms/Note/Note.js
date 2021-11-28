@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import Button from 'components/UI/Button/Button';
+import Button from 'components/atoms/Button/Button';
 
-const Note = ({ title, body, isCard }) => {
+const Note = ({ id, title, body, isCard }) => {
   return isCard ? (
     <div className="p-4 mb-4 bg-white shadow-md rounded-lg">
       <h2 className="text-gray-800 text-2xl font-semibold">{title}</h2>
@@ -32,6 +32,7 @@ const Note = ({ title, body, isCard }) => {
 };
 
 Note.propTypes = {
+  id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
   isCard: PropTypes.bool,
