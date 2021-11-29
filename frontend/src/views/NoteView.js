@@ -13,7 +13,7 @@ const NoteView = () => {
 
   return (
     <MainTemplate title="Note">
-      <Note title={note.title} body={note.body} />
+      <Note {...note} />
     </MainTemplate>
   );
 };
