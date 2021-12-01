@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 
-const Input = ({ label, name, message, textarea, ...props }) => {
+const Input = ({ label, name, errorMessage = '', textarea, ...props }) => {
   const TagInput = textarea ? 'textarea' : 'input';
-  const variant = message ? 'red' : 'gray';
-  const textInt = message ? '600' : '800';
-  const placeholderInt = message ? '600' : '400';
-  const borderInt = message ? '500' : '300';
+  const variant = errorMessage ? 'red' : 'gray';
+  const textInt = errorMessage ? '600' : '800';
+  const placeholderInt = errorMessage ? '600' : '400';
+  const borderInt = errorMessage ? '500' : '300';
 
   return (
     <>
@@ -28,7 +28,7 @@ const Input = ({ label, name, message, textarea, ...props }) => {
         {...props}
       />
 
-      <div className={`mt-1 h-5 text-sm text-right text-${variant}-600`}>{message}</div>
+      <div className={`mt-1 h-5 text-sm text-right text-${variant}-600`}>{errorMessage}</div>
     </>
   );
 };
@@ -36,7 +36,7 @@ const Input = ({ label, name, message, textarea, ...props }) => {
 Input.propTypes = {
   label: PropTypes.string,
   name: PropTypes.string,
-  message: PropTypes.string,
+  errorMessage: PropTypes.string,
   textarea: PropTypes.bool,
 };
 
