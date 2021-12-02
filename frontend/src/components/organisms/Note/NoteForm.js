@@ -11,9 +11,18 @@ const NoteForm = ({ editedNote }) => {
     description: editedNote?.body || '',
   };
 
-  const { values, errors, handleChange, resetForm, handleSubmit } = useForm(initialValues);
+  const validationRules = {
+    title: { required: true, maxLength: 100 },
+    description: { required: true, maxLength: 500 },
+  };
+
+  const { values, errors, handleChange, resetForm, handleSubmit } = useForm(
+    initialValues,
+    validationRules
+  );
+
   const onSubmit = () => {
-    console.log('callback');
+    // callback
   };
 
   return (
