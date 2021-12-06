@@ -12,14 +12,12 @@ const NoteForm = ({ editedNote }) => {
   };
 
   const validationRules = {
-    title: { required: true, maxLength: 100 },
+    title: { required: true, minLength: 3, maxLength: 100 },
     description: { required: true, maxLength: 500 },
   };
 
-  const { values, errors, handleChange, resetForm, handleSubmit } = useForm(
-    initialValues,
-    validationRules
-  );
+  const { values, errors, isFormValid, handleChange, handleBlur, resetForm, handleSubmit } =
+    useForm(initialValues, validationRules);
 
   const onSubmit = () => {
     // callback
@@ -36,6 +34,7 @@ const NoteForm = ({ editedNote }) => {
         placeholder="Title"
         value={values.title}
         onChange={handleChange}
+        onBlur={handleBlur}
         errorMessage={errors.title}
       />
       <Input
@@ -45,6 +44,7 @@ const NoteForm = ({ editedNote }) => {
         placeholder="Description"
         value={values.description}
         onChange={handleChange}
+        onBlur={handleBlur}
         errorMessage={errors.description}
       />
       <div className="flex justify-end gap-3 mt-2">
@@ -55,6 +55,7 @@ const NoteForm = ({ editedNote }) => {
           {editedNoteId ? 'Save note' : 'Add note'}
         </Button>
       </div>
+      {isFormValid ? 'Validated' : 'NOT VALIDATED'}
     </form>
   );
 };
