@@ -20,7 +20,9 @@ const NoteForm = ({ editedNote }) => {
     useForm(initialValues, validationRules);
 
   const onSubmit = () => {
-    // callback
+    // todo: fix isFormValid
+    if (!isFormValid) return;
+    console.log('callback (form is valid)');
   };
 
   return (

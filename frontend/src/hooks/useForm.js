@@ -7,11 +7,11 @@ const useForm = (initialValues = {}, validationRules = {}) => {
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const updateFieldError = (fieldName, fieldValue) => {
-    const rules = validationRules[fieldName];
-    if (!rules) return;
+  const validateField = (fieldName, fieldValue) => {
+    const fieldRules = validationRules[fieldName];
+    if (!fieldRules) return;
 
-    const error = validate(rules, fieldValue);
+    const error = validate(fieldRules, fieldValue);
     // remove previously error (whatever it was)
     const { [fieldName]: removedError, ...restErrors } = errors;
     // add recent error (if exist)
@@ -24,22 +24,46 @@ const useForm = (initialValues = {}, validationRules = {}) => {
     setValues({ ...values, [name]: value });
 
     if (!touched[name]) return;
-    updateFieldError(name, value);
+    validateField(name, value);
   };
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
 
-    // was the field focused
+    // was the field blured
     setTouched({ ...touched, [name]: true });
-    updateFieldError(name, value);
+    validateField(name, value);
   };
 
-  // TODO - add method that validate whole form
+  const validateForm = () => {
+    // todo: return if no errors, but form was modified
+    const formValidation = Object.keys(values).reduce(
+      (form, fieldName) => {
+        const fieldValue = values[fieldName];
+        const fieldRules = validationRules[fieldName];
+
+        const newError = validate(fieldRules, fieldValue); // todo: add condtition if fieldRules?
+        const newTouched = { [fieldName]: true };
+
+        return {
+          errors: { ...form.errors, ...(newError && { [fieldName]: newError }) },
+          touched: { ...form.touched, ...newTouched },
+        };
+      },
+      {
+        errors: { ...errors }, // initial errors object (errors from state)
+        touched: { ...touched }, // initial touched object (touched from state)
+      }
+    );
+    setErrors(formValidation.errors);
+    setTouched(formValidation.touched);
+    // todo: return true if no errors and then pass callback?
+  };
 
   useEffect(() => {
+    // todo: add conditions to check if form is valid (validation fields touched?)
     const errorsNumber = Object.values(errors).length;
-    setIsFormValid(errorsNumber === 0);
+    setIsFormValid(!errorsNumber);
   }, [errors]);
 
   const resetForm = () => {
@@ -50,12 +74,7 @@ const useForm = (initialValues = {}, validationRules = {}) => {
 
   const handleSubmit = (callback) => (e) => {
     e.preventDefault();
-    // if validation pass execute callback
-    // setErrors(validateAllFields(validationRules, values));
-    console.log('values', values);
-    console.log('touched', touched);
-    console.log('errors', errors);
-    console.log('isFormValid', isFormValid);
+    validateForm();
     callback();
   };
 
