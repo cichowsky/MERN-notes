@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Input from 'components/atoms/Input/Input';
 import Button from 'components/atoms/Button/Button';
@@ -12,21 +13,28 @@ const NoteForm = ({ editedNote }) => {
   };
 
   const validationRules = {
-    title: { required: true, minLength: 3, maxLength: 100 },
+    title: { required: true, maxLength: 100 },
     description: { required: true, maxLength: 500 },
   };
 
-  const { values, errors, isFormValid, handleChange, handleBlur, resetForm, handleSubmit } =
+  const { values, errors, isFormValid, handleChange, handleBlur, handleSubmit, validateForm } =
     useForm(initialValues, validationRules);
 
   const onSubmit = () => {
-    // todo: fix isFormValid
     if (!isFormValid) return;
-    console.log('callback (form is valid)');
+    console.log('submit');
   };
 
+  // validate edit note form on mount
+  const formRef = useRef(null);
+  useEffect(() => {
+    if (editedNote) validateForm();
+  }, []);
+
+  const isSubmitButtonDisabled = !isFormValid && !!Object.keys(errors).length;
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
       <h2 className="text-3xl font-semibold pb-3 border-b-2 mb-4">
         {editedNoteId ? 'Edit note' : 'Add new note'}
       </h2>
@@ -50,14 +58,10 @@ const NoteForm = ({ editedNote }) => {
         errorMessage={errors.description}
       />
       <div className="flex justify-end gap-3 mt-2">
-        <Button color="gray" isBig onClick={resetForm}>
-          Reset
-        </Button>
-        <Button type="submit" isBig>
+        <Button type="submit" isBig disabled={isSubmitButtonDisabled}>
           {editedNoteId ? 'Save note' : 'Add note'}
         </Button>
       </div>
-      {isFormValid ? 'Validated' : 'NOT VALIDATED'}
     </form>
   );
 };

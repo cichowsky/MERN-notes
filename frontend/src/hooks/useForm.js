@@ -21,6 +21,7 @@ const useForm = (initialValues = {}, validationRules = {}) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
+    // add conditions for checkbox, number etc. if necessary
     setValues({ ...values, [name]: value });
 
     if (!touched[name]) return;
@@ -36,13 +37,14 @@ const useForm = (initialValues = {}, validationRules = {}) => {
   };
 
   const validateForm = () => {
-    // todo: return if no errors, but form was modified
+    if (isFormValid) return;
+
     const formValidation = Object.keys(values).reduce(
       (form, fieldName) => {
         const fieldValue = values[fieldName];
         const fieldRules = validationRules[fieldName];
 
-        const newError = validate(fieldRules, fieldValue); // todo: add condtition if fieldRules?
+        const newError = validate(fieldRules, fieldValue);
         const newTouched = { [fieldName]: true };
 
         return {
@@ -57,20 +59,13 @@ const useForm = (initialValues = {}, validationRules = {}) => {
     );
     setErrors(formValidation.errors);
     setTouched(formValidation.touched);
-    // todo: return true if no errors and then pass callback?
   };
 
   useEffect(() => {
-    // todo: add conditions to check if form is valid (validation fields touched?)
-    const errorsNumber = Object.values(errors).length;
-    setIsFormValid(!errorsNumber);
-  }, [errors]);
-
-  const resetForm = () => {
-    setValues(initialValues);
-    setTouched({});
-    setErrors({});
-  };
+    const noErrors = !Object.values(errors).length;
+    const fieldsToValidTouched = Object.keys(validationRules).every((key) => touched[key] === true);
+    setIsFormValid(noErrors && fieldsToValidTouched);
+  }, [errors, touched, validationRules]);
 
   const handleSubmit = (callback) => (e) => {
     e.preventDefault();
@@ -78,7 +73,7 @@ const useForm = (initialValues = {}, validationRules = {}) => {
     callback();
   };
 
-  return { values, errors, isFormValid, handleChange, handleBlur, resetForm, handleSubmit };
+  return { values, errors, isFormValid, handleChange, handleBlur, handleSubmit, validateForm };
 };
 
 export default useForm;
