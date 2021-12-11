@@ -1,15 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MainTemplate from 'components/templates/MainTemplate';
 import Note from 'components/organisms/Note/Note';
 
 const mockedNote = {
-  id: 'askbndfsirvbfgadvds',
+  _id: 'askbndfsirvbfgadvds',
   title: 'Shopping list',
   body: 'eggs, milk, water, cookies, bread, cola',
 };
 
 const NoteView = () => {
   const [note, setNote] = useState(mockedNote);
+
+  useEffect(() => {
+    // getNote(id)
+  }, []);
 
   return (
     <MainTemplate title="Note">

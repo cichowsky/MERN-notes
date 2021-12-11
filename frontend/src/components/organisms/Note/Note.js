@@ -4,7 +4,7 @@ import NoteForm from 'components/organisms/Note/NoteForm';
 import Modal from 'components/organisms/Modal/Modal';
 import useModal from 'components/organisms/Modal/useModal';
 
-const Note = ({ id, title, body, isCard }) => {
+const Note = ({ _id, title, body, isCard }) => {
   const { isModalOpen, handleOpenModal, handleCloseModal } = useModal(false);
 
   const NoteCard = (
@@ -16,6 +16,7 @@ const Note = ({ id, title, body, isCard }) => {
         <Button color="purple" onClick={handleOpenModal}>
           Edit
         </Button>
+        {/* deleteNote(id) */}
         <Button color="pink">Delete</Button>
       </div>
     </div>
@@ -32,6 +33,7 @@ const Note = ({ id, title, body, isCard }) => {
         <Button color="purple" isBig onClick={handleOpenModal}>
           Edit note
         </Button>
+        {/* deleteNote(id) */}
         <Button color="pink" isBig>
           Delete note
         </Button>
@@ -43,14 +45,14 @@ const Note = ({ id, title, body, isCard }) => {
     <>
       {isCard ? NoteCard : NoteArticle}
       <Modal isOpen={isModalOpen} handleClose={handleCloseModal}>
-        <NoteForm editedNote={{ id, title, body }} />
+        <NoteForm editedNote={{ _id, title, body }} />
       </Modal>
     </>
   );
 };
 
 Note.propTypes = {
-  id: PropTypes.string.isRequired,
+  _id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
   isCard: PropTypes.bool,

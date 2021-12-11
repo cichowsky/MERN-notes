@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useContext, useEffect } from 'react';
+import { NotesContext } from 'context/NotesContext';
 import MainTemplate from 'components/templates/MainTemplate';
 import Button from 'components/atoms/Button/Button';
 import Note from 'components/organisms/Note/Note';
@@ -6,22 +7,16 @@ import NoteForm from 'components/organisms/Note/NoteForm';
 import Modal from 'components/organisms/Modal/Modal';
 import useModal from 'components/organisms/Modal/useModal';
 
-const mockedNotes = [
-  {
-    id: 'askbndfsirvbfgadvds',
-    title: 'Shopping list',
-    body: 'eggs, milk, water, cookies, bread, cola',
-  },
-  {
-    id: 'hhggfafvfeawfevfaea',
-    title: 'My tasks',
-    body: 'go shopping, cook dinner',
-  },
-];
-
 const NotesListView = () => {
-  const [notes, setNotes] = useState(mockedNotes);
+  const { notesState, notesActions } = useContext(NotesContext);
+  const { notes } = notesState;
+  const { getNotes } = notesActions;
+
   const { isModalOpen, handleOpenModal, handleCloseModal } = useModal(false);
+
+  useEffect(() => {
+    getNotes();
+  }, []);
 
   return (
     <MainTemplate title="Notes list">
@@ -32,7 +27,7 @@ const NotesListView = () => {
         </Button>
       </div>
       {notes.map((note) => (
-        <Note {...note} key={note.id} isCard />
+        <Note {...note} key={note._id} isCard />
       ))}
 
       <Modal isOpen={isModalOpen} handleClose={handleCloseModal}>

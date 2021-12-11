@@ -1,11 +1,15 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useContext } from 'react';
+import { NotesContext } from 'context/NotesContext';
 import PropTypes from 'prop-types';
 import Input from 'components/atoms/Input/Input';
 import Button from 'components/atoms/Button/Button';
 import useForm from 'hooks/useForm';
 
 const NoteForm = ({ editedNote }) => {
-  const editedNoteId = editedNote?.id;
+  const { notesActions } = useContext(NotesContext);
+  const { addNote } = notesActions;
+
+  const editedNoteId = editedNote?._id;
 
   const initialValues = {
     title: editedNote?.title || '',
@@ -22,7 +26,18 @@ const NoteForm = ({ editedNote }) => {
 
   const onSubmit = () => {
     if (!isFormValid) return;
-    console.log('submit');
+
+    const noteData = {
+      title: values.title,
+      body: values.description,
+    };
+
+    if (editedNote) {
+      console.log(`Edit Note id: ${editedNoteId}`);
+      // editNote(id, noteData)
+    } else {
+      addNote(noteData);
+    }
   };
 
   // validate edit note form on mount
@@ -68,7 +83,7 @@ const NoteForm = ({ editedNote }) => {
 
 NoteForm.propTypes = {
   editedNote: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    _id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     body: PropTypes.string.isRequired,
   }),
