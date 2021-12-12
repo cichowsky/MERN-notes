@@ -30,9 +30,11 @@ const NotesListView = () => {
         <Note {...note} key={note._id} isCard />
       ))}
 
-      <Modal isOpen={isModalOpen} handleClose={handleCloseModal}>
-        <NoteForm />
-      </Modal>
+      {isModalOpen && (
+        <Modal handleClose={handleCloseModal}>
+          <NoteForm closeForm={handleCloseModal} />
+        </Modal>
+      )}
     </MainTemplate>
   );
 };

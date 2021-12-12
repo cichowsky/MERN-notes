@@ -5,7 +5,7 @@ import Input from 'components/atoms/Input/Input';
 import Button from 'components/atoms/Button/Button';
 import useForm from 'hooks/useForm';
 
-const NoteForm = ({ editedNote }) => {
+const NoteForm = ({ editedNote, closeForm }) => {
   const { notesActions } = useContext(NotesContext);
   const { addNote, editNote } = notesActions;
 
@@ -38,6 +38,7 @@ const NoteForm = ({ editedNote }) => {
     } else {
       addNote(noteData);
     }
+    closeForm();
   };
 
   // validate edit note form on mount
@@ -87,6 +88,7 @@ NoteForm.propTypes = {
     title: PropTypes.string.isRequired,
     body: PropTypes.string.isRequired,
   }),
+  closeForm: PropTypes.func,
 };
 
 export default NoteForm;

@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { NotesContext } from 'context/NotesContext';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Button from 'components/atoms/Button/Button';
 import NoteForm from 'components/organisms/Note/NoteForm';
@@ -14,8 +15,10 @@ const Note = ({ _id, title, body, isCard }) => {
 
   const NoteCard = (
     <div className="p-4 mb-4 bg-white shadow-md rounded-lg">
-      <h2 className="text-gray-800 text-2xl font-semibold">{title}</h2>
-      <p className="mt-2 mb-4 text-gray-600">{body}</p>
+      <Link to={_id}>
+        <h2 className="text-gray-800 text-2xl font-semibold">{title}</h2>
+        <p className="mt-2 mb-4 text-gray-600">{body}</p>
+      </Link>
 
       <div className="flex justify-end gap-3">
         <Button color="purple" onClick={handleOpenModal}>
@@ -49,9 +52,11 @@ const Note = ({ _id, title, body, isCard }) => {
   return (
     <>
       {isCard ? NoteCard : NoteArticle}
-      <Modal isOpen={isModalOpen} handleClose={handleCloseModal}>
-        <NoteForm editedNote={{ _id, title, body }} />
-      </Modal>
+      {isModalOpen && (
+        <Modal handleClose={handleCloseModal}>
+          <NoteForm editedNote={{ _id, title, body }} closeForm={handleCloseModal} />
+        </Modal>
+      )}
     </>
   );
 };

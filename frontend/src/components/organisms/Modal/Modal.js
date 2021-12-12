@@ -7,9 +7,7 @@ const modalClassName =
   'fixed left-1/2 top-1/2 transform -translate-y-1/2 -translate-x-1/2 w-full max-w-2xl py-5 px-4 bg-white shadow-md rounded-lg z-50';
 const closeBtnClassName = 'fixed p-1 top-0.5 right-0.5 text-red-800 hover:text-red-600';
 
-const Modal = ({ children, isOpen, handleClose = () => {}, isOverlay = true }) => {
-  if (!isOpen) return null;
-
+const Modal = ({ children, handleClose = () => {}, isOverlay = true }) => {
   return ReactDOM.createPortal(
     <>
       {isOverlay && <span className={overlayClassName} />}
@@ -26,7 +24,7 @@ const Modal = ({ children, isOpen, handleClose = () => {}, isOverlay = true }) =
 
 Modal.propTypes = {
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
-  isOpen: PropTypes.bool,
+
   handleClose: PropTypes.func,
   isOverlay: PropTypes.bool,
 };
