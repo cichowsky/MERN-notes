@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+import { NotesContext } from 'context/NotesContext';
 import PropTypes from 'prop-types';
 import Button from 'components/atoms/Button/Button';
 import NoteForm from 'components/organisms/Note/NoteForm';
@@ -5,6 +7,9 @@ import Modal from 'components/organisms/Modal/Modal';
 import useModal from 'components/organisms/Modal/useModal';
 
 const Note = ({ _id, title, body, isCard }) => {
+  const { notesActions } = useContext(NotesContext);
+  const { deleteNote } = notesActions;
+
   const { isModalOpen, handleOpenModal, handleCloseModal } = useModal(false);
 
   const NoteCard = (
@@ -16,8 +21,9 @@ const Note = ({ _id, title, body, isCard }) => {
         <Button color="purple" onClick={handleOpenModal}>
           Edit
         </Button>
-        {/* deleteNote(id) */}
-        <Button color="pink">Delete</Button>
+        <Button onClick={() => deleteNote(_id)} color="pink">
+          Delete
+        </Button>
       </div>
     </div>
   );
@@ -33,8 +39,7 @@ const Note = ({ _id, title, body, isCard }) => {
         <Button color="purple" isBig onClick={handleOpenModal}>
           Edit note
         </Button>
-        {/* deleteNote(id) */}
-        <Button color="pink" isBig>
+        <Button onClick={() => deleteNote(_id)} color="pink" isBig>
           Delete note
         </Button>
       </div>

@@ -10,12 +10,12 @@ import useModal from 'components/organisms/Modal/useModal';
 const NotesListView = () => {
   const { notesState, notesActions } = useContext(NotesContext);
   const { notes } = notesState;
-  const { getNotes } = notesActions;
+  const { getAllNotes } = notesActions;
 
   const { isModalOpen, handleOpenModal, handleCloseModal } = useModal(false);
 
   useEffect(() => {
-    getNotes();
+    getAllNotes();
   }, []);
 
   return (

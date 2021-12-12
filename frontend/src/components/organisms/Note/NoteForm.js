@@ -7,7 +7,7 @@ import useForm from 'hooks/useForm';
 
 const NoteForm = ({ editedNote }) => {
   const { notesActions } = useContext(NotesContext);
-  const { addNote } = notesActions;
+  const { addNote, editNote } = notesActions;
 
   const editedNoteId = editedNote?._id;
 
@@ -33,8 +33,8 @@ const NoteForm = ({ editedNote }) => {
     };
 
     if (editedNote) {
-      console.log(`Edit Note id: ${editedNoteId}`);
-      // editNote(id, noteData)
+      noteData._id = editedNoteId;
+      editNote(noteData);
     } else {
       addNote(noteData);
     }

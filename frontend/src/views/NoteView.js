@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { NotesContext } from 'context/NotesContext';
 import MainTemplate from 'components/templates/MainTemplate';
 import Note from 'components/organisms/Note/Note';
 
@@ -10,6 +11,9 @@ const mockedNote = {
 
 const NoteView = () => {
   const [note, setNote] = useState(mockedNote);
+
+  const { notesActions } = useContext(NotesContext);
+  const { getNote } = notesActions;
 
   useEffect(() => {
     // getNote(id)
