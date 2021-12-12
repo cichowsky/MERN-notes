@@ -1,13 +1,12 @@
 import React, { useReducer } from 'react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
+import api from 'axiosInstance';
 
 const NotesContext = React.createContext();
 
 const NotesProvider = ({ children }) => {
   // CONST
   const GET_ALL_NOTES = 'GET_ALL_NOTES';
-  const GET_NOTE = 'GET_NOTE';
   const ADD_NOTE = 'ADD_NOTE';
   const DELETE_NOTE = 'DELETE_NOTE';
   const EDIT_NOTE = 'EDIT_NOTE';
@@ -56,26 +55,27 @@ const NotesProvider = ({ children }) => {
   // ACTIONS
   const notesActions = {
     async getAllNotes() {
-      const response = await axios.get('http://localhost:3001/api/notes');
+      const response = await api.get('/notes');
       const notes = response.data;
       dispatch({ type: GET_ALL_NOTES, payload: { notes } });
     },
     async addNote(noteData) {
-      const response = await axios.post('http://localhost:3001/api/notes', noteData);
+      const response = await api.post('/notes', noteData);
       const newNote = response.data;
       dispatch({ type: ADD_NOTE, payload: { newNote } });
     },
     async deleteNote(noteId) {
-      const response = await axios.delete(`http://localhost:3001/api/notes/${noteId}`);
+      const response = await api.delete(`/notes/${noteId}`);
       dispatch({ type: DELETE_NOTE, payload: { noteId } });
     },
     async editNote(noteData) {
-      const response = await axios.put(`http://localhost:3001/api/notes/${noteData._id}`, noteData);
+      const response = await api.put(`/notes/${noteData._id}`, noteData);
       dispatch({ type: EDIT_NOTE, payload: { noteData } });
     },
     async getNote(noteId) {
-      const response = await axios.get(`http://localhost:3001/api/notes/${noteId}`);
+      const response = await api.get(`/notes/${noteId}`);
       const note = response.data;
+      return note;
     },
   };
 
