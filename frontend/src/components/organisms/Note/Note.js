@@ -11,7 +11,8 @@ const Note = ({ _id, title, body, isCard }) => {
   const { notesActions } = useContext(NotesContext);
   const { deleteNote } = notesActions;
 
-  const { isModalOpen, handleOpenModal, handleCloseModal } = useModal(false);
+  const [isFormModalOpen, handleOpenFormModal, handleCloseFormModal] = useModal(false);
+  const [isConfirmModalOpen, handleOpenConfirmModal, handleCloseConfirmModal] = useModal(false);
 
   const NoteCard = (
     <div className="p-4 mb-4 bg-white shadow-md rounded-lg">
@@ -21,10 +22,11 @@ const Note = ({ _id, title, body, isCard }) => {
       </Link>
 
       <div className="flex justify-end gap-3">
-        <Button color="purple" onClick={handleOpenModal}>
+        <Button color="purple" onClick={handleOpenFormModal}>
           Edit
         </Button>
-        <Button onClick={() => deleteNote(_id)} color="pink">
+        {/* <Button onClick={() => deleteNote(_id)} color="pink"> */}
+        <Button onClick={handleOpenConfirmModal} color="pink">
           Delete
         </Button>
       </div>
@@ -39,7 +41,7 @@ const Note = ({ _id, title, body, isCard }) => {
       </div>
 
       <div className="flex gap-4">
-        <Button color="purple" isBig onClick={handleOpenModal}>
+        <Button color="purple" isBig onClick={handleOpenFormModal}>
           Edit note
         </Button>
         <Button onClick={() => deleteNote(_id)} color="pink" isBig>
@@ -52,9 +54,32 @@ const Note = ({ _id, title, body, isCard }) => {
   return (
     <>
       {isCard ? NoteCard : NoteArticle}
-      {isModalOpen && (
-        <Modal handleClose={handleCloseModal}>
-          <NoteForm editedNote={{ _id, title, body }} closeForm={handleCloseModal} />
+
+      {isFormModalOpen && (
+        <Modal handleClose={handleCloseFormModal}>
+          <NoteForm editedNote={{ _id, title, body }} closeForm={handleCloseFormModal} />
+        </Modal>
+      )}
+
+      {isConfirmModalOpen && (
+        <Modal handleClose={handleCloseConfirmModal}>
+          <h2 className="text-gray-800 text-2xl font-semibold mb-4">
+            Do You confirm deletion of this note?
+          </h2>
+          <div className="flex justify-end gap-3">
+            <Button onClick={handleCloseConfirmModal} color="gray">
+              No
+            </Button>
+            <Button
+              onClick={() => {
+                deleteNote(_id);
+                handleCloseConfirmModal();
+              }}
+              color="blue"
+            >
+              Yes
+            </Button>
+          </div>
         </Modal>
       )}
     </>

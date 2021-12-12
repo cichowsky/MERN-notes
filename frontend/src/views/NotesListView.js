@@ -12,7 +12,7 @@ const NotesListView = () => {
   const { notes } = notesState;
   const { getAllNotes } = notesActions;
 
-  const { isModalOpen, handleOpenModal, handleCloseModal } = useModal(false);
+  const [isFormModalOpen, handleOpenFormModal, handleCloseFormModal] = useModal(false);
 
   useEffect(() => {
     getAllNotes();
@@ -22,7 +22,7 @@ const NotesListView = () => {
     <MainTemplate title="Notes list">
       <div className="flex justify-between items-center mb-8">
         <p className="text-3xl font-semibold">Notes: {notes.length}</p>
-        <Button isBig onClick={handleOpenModal}>
+        <Button isBig onClick={handleOpenFormModal}>
           + Add note
         </Button>
       </div>
@@ -30,9 +30,9 @@ const NotesListView = () => {
         <Note {...note} key={note._id} isCard />
       ))}
 
-      {isModalOpen && (
-        <Modal handleClose={handleCloseModal}>
-          <NoteForm closeForm={handleCloseModal} />
+      {isFormModalOpen && (
+        <Modal handleClose={handleCloseFormModal}>
+          <NoteForm closeForm={handleCloseFormModal} />
         </Modal>
       )}
     </MainTemplate>
