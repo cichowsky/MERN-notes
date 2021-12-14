@@ -1,27 +1,46 @@
 import { useState, useEffect, useContext } from 'react';
 import { NotesContext } from 'context/NotesContext';
+import { Link, useParams } from 'react-router-dom';
 import MainTemplate from 'components/templates/MainTemplate';
 import Note from 'components/organisms/Note/Note';
-
-const mockedNote = {
-  _id: 'askbndfsirvbfgadvds',
-  title: 'Shopping list',
-  body: 'eggs, milk, water, cookies, bread, cola',
-};
+import Alert from 'components/atoms/Alert/Alert';
 
 const NoteView = () => {
-  const [note, setNote] = useState(mockedNote);
+  const { id } = useParams();
+  const { notesState, notesActions } = useContext(NotesContext);
+  const { notes } = notesState;
+  const { fetchNote } = notesActions;
 
-  const { notesActions } = useContext(NotesContext);
-  const { getNote } = notesActions;
+  const [note, setNote] = useState(null);
+  const [error, setError] = useState(null);
+
+  const getNote = async () => {
+    const searchedNote = notes.find((n) => n._id === id);
+    if (searchedNote) {
+      setNote(searchedNote);
+      return;
+    }
+
+    const [fetchedNote, fetchedError] = await fetchNote(id);
+    if (fetchedNote) setNote(fetchedNote);
+    if (fetchedError) setError(fetchedError);
+  };
 
   useEffect(() => {
-    // getNote(id)
-  }, []);
+    getNote();
+  }, [notes]);
 
   return (
     <MainTemplate title="Note">
-      <Note {...note} />
+      <Link
+        to="/notes"
+        className="inline-block mb-6 text-xl text-gray-600 font-semibold hover:text-gray-700"
+      >
+        🡠 back to list
+      </Link>
+
+      {error && <Alert>{error.message}</Alert>}
+      {note && <Note {...note} />}
     </MainTemplate>
   );
 };

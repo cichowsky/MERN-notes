@@ -9,8 +9,13 @@ class NoteController {
 
   async getNote(req, res) {
     const { id } = req.params;
+    let note;
 
-    const note = await Note.findOne({ _id: id });
+    try {
+      note = await Note.findOne({ _id: id });
+    } catch (error) {
+      return res.status(404).json({ message: error.message });
+    }
 
     res.status(200).json(note);
   }

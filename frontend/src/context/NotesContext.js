@@ -72,10 +72,19 @@ const NotesProvider = ({ children }) => {
       const response = await api.put(`/notes/${noteData._id}`, noteData);
       dispatch({ type: EDIT_NOTE, payload: { noteData } });
     },
-    async getNote(noteId) {
-      const response = await api.get(`/notes/${noteId}`);
-      const note = response.data;
-      return note;
+    async fetchNote(noteId) {
+      let note;
+      let err;
+
+      try {
+        const response = await api.get(`/notes/${noteId}`);
+        note = response.data;
+      } catch (error) {
+        error.message = 'Note not found!';
+        err = error;
+      }
+
+      return [note, err];
     },
   };
 

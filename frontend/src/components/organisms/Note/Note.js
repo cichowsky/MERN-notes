@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { NotesContext } from 'context/NotesContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Button from 'components/atoms/Button/Button';
 import NoteForm from 'components/organisms/Note/NoteForm';
@@ -13,6 +13,8 @@ const Note = ({ _id, title, body, isCard }) => {
 
   const [isFormModalOpen, handleOpenFormModal, handleCloseFormModal] = useModal(false);
   const [isConfirmModalOpen, handleOpenConfirmModal, handleCloseConfirmModal] = useModal(false);
+
+  const navigate = useNavigate();
 
   const NoteCard = (
     <div className="p-4 mb-4 bg-white shadow-md rounded-lg">
@@ -44,7 +46,7 @@ const Note = ({ _id, title, body, isCard }) => {
         <Button color="purple" isBig onClick={handleOpenFormModal}>
           Edit note
         </Button>
-        <Button onClick={() => deleteNote(_id)} color="pink" isBig>
+        <Button onClick={handleOpenConfirmModal} color="pink" isBig>
           Delete note
         </Button>
       </div>
@@ -74,6 +76,7 @@ const Note = ({ _id, title, body, isCard }) => {
               onClick={() => {
                 deleteNote(_id);
                 handleCloseConfirmModal();
+                if (!isCard) navigate('/notes');
               }}
               color="blue"
             >
