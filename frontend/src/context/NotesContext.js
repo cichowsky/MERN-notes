@@ -65,11 +65,11 @@ const NotesProvider = ({ children }) => {
       dispatch({ type: ADD_NOTE, payload: { newNote } });
     },
     async deleteNote(noteId) {
-      const response = await api.delete(`/notes/${noteId}`);
+      await api.delete(`/notes/${noteId}`);
       dispatch({ type: DELETE_NOTE, payload: { noteId } });
     },
     async editNote(noteData) {
-      const response = await api.put(`/notes/${noteData._id}`, noteData);
+      await api.put(`/notes/${noteData._id}`, noteData);
       dispatch({ type: EDIT_NOTE, payload: { noteData } });
     },
     async fetchNote(noteId) {

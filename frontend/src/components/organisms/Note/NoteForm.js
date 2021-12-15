@@ -1,4 +1,4 @@
-import { useRef, useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { NotesContext } from 'context/NotesContext';
 import PropTypes from 'prop-types';
 import Input from 'components/atoms/Input/Input';
@@ -42,7 +42,6 @@ const NoteForm = ({ editedNote, closeForm }) => {
   };
 
   // validate edit note form on mount
-  const formRef = useRef(null);
   useEffect(() => {
     if (editedNote) validateForm();
   }, []);
@@ -50,7 +49,7 @@ const NoteForm = ({ editedNote, closeForm }) => {
   const isSubmitButtonDisabled = !isFormValid && !!Object.keys(errors).length;
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <h2 className="text-3xl font-semibold pb-3 border-b-2 mb-4">
         {editedNoteId ? 'Edit note' : 'Add new note'}
       </h2>
