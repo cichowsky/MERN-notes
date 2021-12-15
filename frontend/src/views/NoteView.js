@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import MainTemplate from 'components/templates/MainTemplate';
 import Note from 'components/organisms/Note/Note';
 import Alert from 'components/atoms/Alert/Alert';
+import Loader from 'components/atoms/Loader/Loader';
 
 const NoteView = () => {
   const { id } = useParams();
@@ -13,20 +14,25 @@ const NoteView = () => {
 
   const [note, setNote] = useState(null);
   const [error, setError] = useState(null);
-
-  const getNote = async () => {
-    const searchedNote = notes.find((n) => n._id === id);
-    if (searchedNote) {
-      setNote(searchedNote);
-      return;
-    }
-
-    const [fetchedNote, fetchedError] = await fetchNote(id);
-    if (fetchedNote) setNote(fetchedNote);
-    if (fetchedError) setError(fetchedError);
-  };
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const getNote = async () => {
+      setLoading(true);
+
+      const searchedNote = notes.find((n) => n._id === id);
+      if (searchedNote) {
+        setNote(searchedNote);
+        setLoading(false);
+        return;
+      }
+
+      const [fetchedNote, fetchedError] = await fetchNote(id);
+      if (fetchedNote) setNote(fetchedNote);
+      if (fetchedError) setError(fetchedError);
+
+      setLoading(false);
+    };
     getNote();
   }, [notes]);
 
@@ -39,6 +45,7 @@ const NoteView = () => {
         🡠 back to list
       </Link>
 
+      {loading && <Loader />}
       {error && <Alert>{error.message}</Alert>}
       {note && <Note {...note} />}
     </MainTemplate>
