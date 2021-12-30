@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const userController = require("../controllers/userController");
 const noteController = require("../controllers/noteController");
+
+router.post("/user/register", userController.register);
 
 router.get("/notes", noteController.getAllNotes);
 router.get("/notes/:id", noteController.getNote);
