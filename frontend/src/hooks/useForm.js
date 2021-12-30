@@ -67,13 +67,30 @@ const useForm = (initialValues = {}, validationRules = {}) => {
     setIsFormValid(noErrors && fieldsToValidTouched);
   }, [errors, touched, validationRules]);
 
+  const resetForm = () => {
+    setValues(initialValues);
+    setTouched({});
+    setErrors({});
+    setIsFormValid(false);
+  };
+
   const handleSubmit = (callback) => (e) => {
     e.preventDefault();
     validateForm();
     callback();
   };
 
-  return { values, errors, isFormValid, handleChange, handleBlur, handleSubmit, validateForm };
+  return {
+    values,
+    errors,
+    touched,
+    isFormValid,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    validateForm,
+    resetForm,
+  };
 };
 
 export default useForm;

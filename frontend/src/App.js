@@ -12,7 +12,7 @@ const App = () => {
           <Route path="/" element={<Navigate to="/notes" />} />
           <Route path="/notes" element={<NotesListView />} />
           <Route path="/notes/:id" element={<NoteView />} />
-          <Route path="/auth" element={<AuthView />} />
+          <Route path="/auth/*" element={<AuthView />} />
         </Routes>
       </NotesProvider>
     </BrowserRouter>
