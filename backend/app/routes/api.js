@@ -4,6 +4,7 @@ const userController = require("../controllers/userController");
 const noteController = require("../controllers/noteController");
 
 router.post("/user/register", userController.register);
+router.post("/user/login", userController.login);
 
 router.get("/notes", noteController.getAllNotes);
 router.get("/notes/:id", noteController.getNote);

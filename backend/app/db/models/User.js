@@ -30,11 +30,17 @@ UserSchema.pre("save", async function (next) {
 // https://mongoosejs.com/docs/middleware.html#error-handling-middleware
 UserSchema.post("save", function (error, doc, next) {
   if (error.name === "MongoServerError" && error.code === 11000) {
-    next(new Error("This email is already used!"));
+    next(new Error("Email is already used!"));
   } else {
     next();
   }
 });
+
+UserSchema.methods = {
+  async comparePassword(password) {
+    return bcrypt.compare(password, this.password);
+  },
+};
 
 const User = mongoose.model("User", UserSchema);
 

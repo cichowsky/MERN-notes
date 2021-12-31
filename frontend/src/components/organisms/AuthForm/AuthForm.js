@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import useForm from 'hooks/useForm';
+import { register, login } from 'services/authentication';
 import Input from 'components/atoms/Input/Input';
 import Button from 'components/atoms/Button/Button';
 
@@ -43,7 +44,7 @@ const AuthForm = ({ isRegisterForm }) => {
     return errorMessage;
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (!isFormValid && !comparePassword()) return;
 
     const userData = {
@@ -51,9 +52,15 @@ const AuthForm = ({ isRegisterForm }) => {
       password: values.password,
     };
 
-    // if register form - register action
-    // else login action
-    console.log(userData);
+    if (isRegisterForm) {
+      const [data, error] = await register(userData);
+      if (data) console.log(data.message);
+      if (error) console.error(error);
+    } else {
+      const [data, error] = await login(userData);
+      if (data) console.log(data.message);
+      if (error) console.error(error);
+    }
   };
 
   const isSubmitButtonDisabled =
@@ -94,7 +101,7 @@ const AuthForm = ({ isRegisterForm }) => {
           errorMessage={errors.repeatPassword || comparePassword()}
         />
       )}
-      <div className="flex justify-end mt-4">
+      <div className="flex justify-end mt-2">
         <Button type="submit" isBig disabled={isSubmitButtonDisabled}>
           {isRegisterForm ? 'Register' : 'Log in'}
         </Button>
