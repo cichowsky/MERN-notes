@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 import useForm from 'hooks/useForm';
-import { register, login } from 'services/authentication';
+import { register as registerAction, login as loginAction } from 'services/authentication';
 import Input from 'components/atoms/Input/Input';
 import Button from 'components/atoms/Button/Button';
+import Modal from 'components/organisms/Modal/Modal';
 
 const AuthForm = ({ isRegisterForm }) => {
   const initialValues = {
@@ -29,6 +31,9 @@ const AuthForm = ({ isRegisterForm }) => {
     resetForm,
   } = useForm(initialValues, validationRules);
 
+  const [message, setMessage] = useState(null);
+  const navigate = useNavigate();
+
   // force reset form when switch login/register
   useEffect(() => {
     resetForm();
@@ -44,6 +49,23 @@ const AuthForm = ({ isRegisterForm }) => {
     return errorMessage;
   };
 
+  const register = async (userData) => {
+    const [data, error] = await registerAction(userData);
+    if (data) {
+      navigate('/auth/login');
+      setMessage({ text: data.message, color: 'green' });
+    }
+    if (error) setMessage({ text: error });
+  };
+
+  const login = async (userData) => {
+    const [data, error] = await loginAction(userData);
+    if (data) {
+      console.log(data.message);
+    }
+    if (error) setMessage({ text: error });
+  };
+
   const onSubmit = async () => {
     if (!isFormValid && !comparePassword()) return;
 
@@ -53,13 +75,9 @@ const AuthForm = ({ isRegisterForm }) => {
     };
 
     if (isRegisterForm) {
-      const [data, error] = await register(userData);
-      if (data) console.log(data.message);
-      if (error) console.error(error);
+      await register(userData);
     } else {
-      const [data, error] = await login(userData);
-      if (data) console.log(data.message);
-      if (error) console.error(error);
+      await login(userData);
     }
   };
 
@@ -106,6 +124,12 @@ const AuthForm = ({ isRegisterForm }) => {
           {isRegisterForm ? 'Register' : 'Log in'}
         </Button>
       </div>
+
+      {message && (
+        <Modal handleClose={() => setMessage(null)}>
+          <span className={`font-semibold text-${message.color || 'red'}-600`}>{message.text}</span>
+        </Modal>
+      )}
     </form>
   );
 };
