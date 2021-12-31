@@ -46,7 +46,7 @@ const NoteView = () => {
       </Link>
 
       {loading && <Loader />}
-      {error && <Alert>{error.message}</Alert>}
+      {error && <Alert>{error}</Alert>}
       {note && <Note {...note} />}
     </MainTemplate>
   );

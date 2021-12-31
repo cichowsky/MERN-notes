@@ -24,7 +24,7 @@ const NoteForm = ({ editedNote, closeForm }) => {
   const { values, errors, isFormValid, handleChange, handleBlur, handleSubmit, validateForm } =
     useForm(initialValues, validationRules);
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (!isFormValid) return;
 
     const noteData = {
@@ -34,9 +34,9 @@ const NoteForm = ({ editedNote, closeForm }) => {
 
     if (editedNote) {
       noteData._id = editedNoteId;
-      editNote(noteData);
+      await editNote(noteData);
     } else {
-      addNote(noteData);
+      await addNote(noteData);
     }
     closeForm();
   };

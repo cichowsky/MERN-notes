@@ -80,8 +80,7 @@ const NotesProvider = ({ children }) => {
         const response = await api.get(`/notes/${noteId}`);
         note = response.data;
       } catch (error) {
-        error.message = 'Note not found!';
-        err = error;
+        err = error.response.data.message;
       }
 
       return [note, err];
