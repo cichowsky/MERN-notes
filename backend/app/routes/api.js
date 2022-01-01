@@ -2,9 +2,14 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
 const noteController = require("../controllers/noteController");
+const { authMiddleware } = require("../middlewares/authMiddleware");
 
 router.post("/user/register", userController.register);
 router.post("/user/login", userController.login);
+router.post("/user/refresh", userController.refresh);
+router.delete("/user/logout", userController.logout);
+
+router.get("/protected", authMiddleware, userController.protected); // TODO: delete this (only for testing purpose)
 
 router.get("/notes", noteController.getAllNotes);
 router.get("/notes/:id", noteController.getNote);

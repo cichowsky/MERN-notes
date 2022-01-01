@@ -61,7 +61,7 @@ const AuthForm = ({ isRegisterForm }) => {
   const login = async (userData) => {
     const [data, error] = await loginAction(userData);
     if (data) {
-      console.log(data.message);
+      // redirect to notes list
     }
     if (error) setMessage({ text: error });
   };
