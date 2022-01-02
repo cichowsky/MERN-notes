@@ -1,16 +1,12 @@
 const User = require("../db/models/User");
-const jwt = require("jsonwebtoken");
-const { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } = require("../config");
-
-const generateAccessToken = (payload) => {
-  return jwt.sign(payload, ACCESS_TOKEN_KEY, { expiresIn: "15s" });
-};
-
-const generateRefreshToken = (payload) => {
-  return jwt.sign(payload, REFRESH_TOKEN_KEY, { expiresIn: "7d" });
-};
-
-let refreshTokens = []; // TODO: database
+const {
+  jwtGenerateAccessToken,
+  jwtGenerateRefreshToken,
+  jwtVerifyRefreshToken,
+  saveRefreshToken,
+  deleteRefreshToken,
+  isRefreshTokenInDB,
+} = require("../jwtActions");
 
 class UserController {
   async register(req, res) {
@@ -37,9 +33,9 @@ class UserController {
 
     const payload = { user_id: user._id.toString() };
 
-    const accessToken = generateAccessToken(payload);
-    const refreshToken = generateRefreshToken(payload);
-    refreshTokens.push(refreshToken); // TODO: database
+    const accessToken = jwtGenerateAccessToken(payload);
+    const refreshToken = jwtGenerateRefreshToken(payload);
+    await saveRefreshToken(payload.user_id, refreshToken);
 
     return res.json({ accessToken, refreshToken });
   }
@@ -48,19 +44,20 @@ class UserController {
     const { refreshToken } = req.body;
 
     if (!refreshToken) return res.status(401).json("User not authenticated!");
-    if (!refreshTokens.includes(refreshToken)) {
+    if (!(await isRefreshTokenInDB(refreshToken))) {
       return res.status(403).json("Refresh token is not valid!");
     }
 
-    jwt.verify(refreshToken, REFRESH_TOKEN_KEY, (err, data) => {
+    jwtVerifyRefreshToken(refreshToken, async (err, data) => {
       if (err) return res.status(403).json("Refresh token is not valid!");
 
       const payload = { user_id: data.user_id };
-      const newAccessToken = generateAccessToken(payload);
-      // to additional improvement of security generate new refresh token
-      const newRefreshToken = generateRefreshToken(payload);
-      refreshTokens = refreshTokens.filter((token) => token !== refreshToken); // TODO: database
-      refreshTokens.push(newRefreshToken); // TODO: database
+      const newAccessToken = jwtGenerateAccessToken(payload);
+
+      // additional improvement of security by generating new refresh token
+      const newRefreshToken = jwtGenerateRefreshToken(payload);
+      await deleteRefreshToken(refreshToken);
+      await saveRefreshToken(payload.user_id, newRefreshToken);
 
       res.json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
     });
@@ -69,9 +66,9 @@ class UserController {
   async logout(req, res) {
     const { refreshToken } = req.body;
 
-    refreshTokens = refreshTokens.filter((token) => token !== refreshToken); // TODO: database
+    await deleteRefreshToken(refreshToken);
 
-    res.status(204).json("User logged out.");
+    res.status(200).json("User logged out.");
   }
 
   // TODO: delete this (only for testing purpose)
