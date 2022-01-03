@@ -1,13 +1,17 @@
-import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import AuthContext from 'context/AuthContext';
 import useForm from 'hooks/useForm';
-import { register as registerAction, login as loginAction } from 'services/authentication';
 import Input from 'components/atoms/Input/Input';
 import Button from 'components/atoms/Button/Button';
 import Modal from 'components/organisms/Modal/Modal';
 
 const AuthForm = ({ isRegisterForm }) => {
+  const { loginUser, registerUser } = useContext(AuthContext);
+  const [message, setMessage] = useState(null);
+  const navigate = useNavigate();
+
   const initialValues = {
     email: '',
     password: '',
@@ -31,9 +35,6 @@ const AuthForm = ({ isRegisterForm }) => {
     resetForm,
   } = useForm(initialValues, validationRules);
 
-  const [message, setMessage] = useState(null);
-  const navigate = useNavigate();
-
   // force reset form when switch login/register
   useEffect(() => {
     resetForm();
@@ -50,7 +51,7 @@ const AuthForm = ({ isRegisterForm }) => {
   };
 
   const register = async (userData) => {
-    const [data, error] = await registerAction(userData);
+    const [data, error] = await registerUser(userData);
     if (data) {
       navigate('/auth/login');
       setMessage({ text: data.message, color: 'green' });
@@ -59,9 +60,9 @@ const AuthForm = ({ isRegisterForm }) => {
   };
 
   const login = async (userData) => {
-    const [data, error] = await loginAction(userData);
+    const [data, error] = await loginUser(userData);
     if (data) {
-      // redirect to notes list
+      navigate('/notes');
     }
     if (error) setMessage({ text: error });
   };

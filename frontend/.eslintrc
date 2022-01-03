@@ -24,6 +24,7 @@
   "plugins": ["react", "prettier"],
   "rules": {
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
+    "camelcase": 0,
     "import/prefer-default-export": 0,
     "import": 0,
     "import/extensions": 0,
@@ -36,7 +37,6 @@
     "react/state-in-constructor": 0,
     "react/require-default-props": 0,
     "react/prop-types": 1,
-
     "no-case-declarations": 0,
     "no-unused-vars": [
       1,
