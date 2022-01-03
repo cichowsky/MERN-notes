@@ -55,7 +55,7 @@ const AuthForm = ({ isRegisterForm }) => {
   };
 
   const login = async (userData) => {
-    const [data, error] = await loginUser(userData);
+    const [error] = await loginUser(userData);
     if (error) setMessage({ text: error });
   };
 

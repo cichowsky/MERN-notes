@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
 
   const [authTokens, setAuthTokens] = useState(() => authTokensFromLS);
   const [user, setUser] = useState(() => userFromLS);
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -35,12 +36,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginUser = async (userData) => {
-    let data;
     let err;
 
     try {
       const res = await api.post('/user/login', userData);
-      data = res.data;
+      const { data } = res;
 
       setAuthTokens(data);
       localStorage.setItem('authTokens', JSON.stringify(data));
@@ -53,11 +53,11 @@ export const AuthProvider = ({ children }) => {
       err = error.response.data.message;
     }
 
-    return [data, err];
+    return [err];
   };
 
   const logoutUser = async () => {
-    const body = { refreshToken: authTokens.refreshToken };
+    const body = { refreshToken: authTokens?.refreshToken };
     await api.delete('/user/logout', { data: body });
 
     setAuthTokens(null);
@@ -65,14 +65,50 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('authTokens');
   };
 
+  const updateToken = async () => {
+    try {
+      const body = { refreshToken: authTokens?.refreshToken };
+      const res = await api.post('/user/refresh', body);
+      const { data } = res;
+
+      setAuthTokens(data);
+      localStorage.setItem('authTokens', JSON.stringify(data));
+
+      const decodedPayload = jwt_decode(data.accessToken);
+      setUser(decodedPayload.user_id);
+    } catch (error) {
+      await logoutUser();
+    }
+
+    if (loading) setLoading(false);
+  };
+
   const contextData = {
     user,
+    authTokens,
     loginUser,
     registerUser,
     logoutUser,
+    updateToken,
   };
 
-  return <AuthContext.Provider value={contextData}>{children}</AuthContext.Provider>;
+  useEffect(() => {
+    if (loading) {
+      if (authTokens) updateToken();
+      if (!authTokens) setLoading(false);
+    }
+
+    const expireTime = 1000 * 10; // 4 minutes (1 minute less than in backend)
+    const interval = setInterval(() => {
+      if (authTokens) updateToken();
+    }, expireTime);
+
+    return () => clearInterval(interval);
+  }, [authTokens, loading]);
+
+  return (
+    <AuthContext.Provider value={contextData}>{loading ? null : children}</AuthContext.Provider>
+  );
 };
 
 AuthProvider.propTypes = {
