@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import AuthContext from 'context/AuthContext';
 import useForm from 'hooks/useForm';
@@ -10,7 +9,6 @@ import Modal from 'components/organisms/Modal/Modal';
 const AuthForm = ({ isRegisterForm }) => {
   const { loginUser, registerUser } = useContext(AuthContext);
   const [message, setMessage] = useState(null);
-  const navigate = useNavigate();
 
   const initialValues = {
     email: '',
@@ -52,18 +50,12 @@ const AuthForm = ({ isRegisterForm }) => {
 
   const register = async (userData) => {
     const [data, error] = await registerUser(userData);
-    if (data) {
-      navigate('/auth/login');
-      setMessage({ text: data.message, color: 'green' });
-    }
+    if (data) setMessage({ text: data.message, color: 'green' });
     if (error) setMessage({ text: error });
   };
 
   const login = async (userData) => {
     const [data, error] = await loginUser(userData);
-    if (data) {
-      navigate('/notes');
-    }
     if (error) setMessage({ text: error });
   };
 

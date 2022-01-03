@@ -7,7 +7,7 @@ const navLinkClassName = ({ isActive }) => {
 };
 
 const Header = () => {
-  const { user } = useContext(AuthContext);
+  const { user, logoutUser } = useContext(AuthContext);
 
   return (
     <header className="flex justify-center items-center h-12 bg-gray-600 shadow-md">
@@ -23,10 +23,13 @@ const Header = () => {
           </>
         ) : (
           <>
-            {/* todo */}
-            {/* <NavLink to="/auth/logout" className={navLinkClassName}>
+            <button
+              type="button"
+              className="text-gray-300 hover:text-gray-100 py-3 mr-4"
+              onClick={logoutUser}
+            >
               Log out
-            </NavLink> */}
+            </button>
             <NavLink end to="/notes" className={navLinkClassName}>
               Notes list
             </NavLink>

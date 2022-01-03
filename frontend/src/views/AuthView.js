@@ -1,8 +1,19 @@
-import { Routes, Route, Navigate, Link, useLocation, useParams } from 'react-router-dom';
+import { useEffect, useContext } from 'react';
+import { Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
+import AuthContext from 'context/AuthContext';
 import MainTemplate from 'components/templates/MainTemplate';
 import AuthForm from 'components/organisms/AuthForm/AuthForm';
 
 const AuthView = () => {
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/notes');
+    }
+  }, [user]);
+
   const { pathname } = useLocation();
   const authAction = pathname.substring(pathname.lastIndexOf('/') + 1);
 
