@@ -21,6 +21,7 @@ export const login = async (userData) => {
   try {
     const res = await api.post('/user/login', userData);
     data = res.data;
+    console.log(data);
     // todo JWT
   } catch (error) {
     err = error.response.data.message;

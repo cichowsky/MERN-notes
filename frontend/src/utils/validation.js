@@ -1,4 +1,4 @@
-import { isObject } from './utils';
+import { isObject } from './helpers';
 
 export function validateEmail(text) {
   const regexp =
