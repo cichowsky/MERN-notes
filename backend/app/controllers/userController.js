@@ -70,13 +70,6 @@ class UserController {
 
     res.status(200).json("User logged out.");
   }
-
-  // TODO: delete this (only for testing purpose)
-  async protected(req, res) {
-    const { user_id } = req.data; // from authMiddleware
-    // console.log("user_id", user_id);
-    res.send("You have access to this page!");
-  }
 }
 
 module.exports = new UserController();

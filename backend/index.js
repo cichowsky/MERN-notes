@@ -19,5 +19,5 @@ app.use("/api", router);
 
 // server
 app.listen(port, () => {
-  console.log(`Server is listening at http://localhost:${port}`);
+  console.log(`Server is listening on PORT:${port}`);
 });
