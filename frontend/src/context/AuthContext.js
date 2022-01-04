@@ -17,6 +17,16 @@ export const AuthProvider = ({ children }) => {
 
   const navigate = useNavigate();
 
+  const updateAuthState = (tokens) => {
+    console.log('aktaualizejszyn');
+
+    setAuthTokens(tokens);
+    setLocalStorage('authTokens', tokens);
+
+    const accessTokenPayload = jwt_decode(tokens.accessToken);
+    setUser(accessTokenPayload.user_id);
+  };
+
   const registerUser = async (userData) => {
     let data;
     let err;
@@ -38,13 +48,9 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const res = await api.post('/user/login', userData);
-      const { data } = res;
+      const tokens = res.data;
 
-      setAuthTokens(data);
-      setLocalStorage('authTokens', data);
-
-      const tokenPayload = jwt_decode(data.accessToken);
-      setUser(tokenPayload.user_id);
+      updateAuthState(tokens);
 
       navigate('/notes');
     } catch (error) {
@@ -62,32 +68,29 @@ export const AuthProvider = ({ children }) => {
     removeLocalStorage('authTokens');
   };
 
-  // const updateToken = async () => {
-  //   try {
-  //     const res = await api.post('/user/refresh', { refreshToken: authTokens?.refreshToken });
-  //     const { data } = res;
+  const updateTokens = async () => {
+    let newTokens;
 
-  //     setAuthTokens(data);
-  //     setLocalStorage('authTokens', data);
+    try {
+      const res = await api.post('/user/refresh', { refreshToken: authTokens?.refreshToken });
+      newTokens = res.data;
 
-  //     const tokenPayload = jwt_decode(data.accessToken);
-  //     setUser(tokenPayload.user_id);
-  //   } catch (error) {
-  //     await logoutUser();
-  //   }
+      updateAuthState(newTokens);
+    } catch (error) {
+      // there is no refreshToken in DB - log out
+      await logoutUser();
+    }
 
-  //   if (loading) setLoading(false);
-  // };
+    return newTokens;
+  };
 
   const contextData = {
     user,
     authTokens,
-    setUser,
-    setAuthTokens,
     loginUser,
     registerUser,
     logoutUser,
-    // updateToken,
+    updateTokens,
   };
 
   useEffect(() => {
