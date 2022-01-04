@@ -9,12 +9,10 @@ router.post("/user/login", userController.login);
 router.post("/user/refresh", userController.refresh);
 router.delete("/user/logout", userController.logout);
 
-router.get("/protected", authMiddleware, userController.protected); // TODO: delete this (only for testing purpose)
-
-router.get("/notes", noteController.getAllNotes);
+router.get("/notes", authMiddleware, noteController.getAllNotes);
 router.get("/notes/:id", noteController.getNote);
-router.post("/notes", noteController.saveNote);
-router.put("/notes/:id", noteController.updateNote);
-router.delete("/notes/:id", noteController.deleteNote);
+router.post("/notes", authMiddleware, noteController.saveNote);
+router.put("/notes/:id", authMiddleware, noteController.updateNote);
+router.delete("/notes/:id", authMiddleware, noteController.deleteNote);
 
 module.exports = router;

@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
-import api from 'axiosInstance';
+import api, { apiProtected } from 'axiosInstance';
 
 const NotesContext = React.createContext();
 
@@ -55,21 +55,21 @@ const NotesProvider = ({ children }) => {
   // ACTIONS
   const notesActions = {
     async getAllNotes() {
-      const response = await api.get('/notes');
+      const response = await apiProtected.get('/notes');
       const notes = response.data;
       dispatch({ type: GET_ALL_NOTES, payload: { notes } });
     },
     async addNote(noteData) {
-      const response = await api.post('/notes', noteData);
+      const response = await apiProtected.post('/notes', noteData);
       const newNote = response.data;
       dispatch({ type: ADD_NOTE, payload: { newNote } });
     },
     async deleteNote(noteId) {
-      await api.delete(`/notes/${noteId}`);
+      await apiProtected.delete(`/notes/${noteId}`);
       dispatch({ type: DELETE_NOTE, payload: { noteId } });
     },
     async editNote(noteData) {
-      await api.put(`/notes/${noteData._id}`, noteData);
+      await apiProtected.put(`/notes/${noteData._id}`, noteData);
       dispatch({ type: EDIT_NOTE, payload: { noteData } });
     },
     async fetchNote(noteId) {

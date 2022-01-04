@@ -1,20 +1,18 @@
 import { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import api from 'axiosInstance';
+import { getLocalStorage, setLocalStorage, removeLocalStorage } from 'utils/helpers';
+import api, { apiProtected } from 'axiosInstance';
 import jwt_decode from 'jwt-decode';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const authTokensFromLS = localStorage.getItem('authTokens')
-    ? JSON.parse(localStorage.getItem('authTokens'))
-    : null;
+  const authTokensLS = getLocalStorage('authTokens');
+  const userLS = authTokensLS ? jwt_decode(authTokensLS.accessToken).user_id : null;
 
-  const userFromLS = authTokensFromLS ? jwt_decode(authTokensFromLS.accessToken).user_id : null;
-
-  const [authTokens, setAuthTokens] = useState(() => authTokensFromLS);
-  const [user, setUser] = useState(() => userFromLS);
+  const [authTokens, setAuthTokens] = useState(() => authTokensLS);
+  const [user, setUser] = useState(() => userLS);
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
@@ -43,10 +41,10 @@ export const AuthProvider = ({ children }) => {
       const { data } = res;
 
       setAuthTokens(data);
-      localStorage.setItem('authTokens', JSON.stringify(data));
+      setLocalStorage('authTokens', data);
 
-      const decodedPayload = jwt_decode(data.accessToken);
-      setUser(decodedPayload.user_id);
+      const tokenPayload = jwt_decode(data.accessToken);
+      setUser(tokenPayload.user_id);
 
       navigate('/notes');
     } catch (error) {
@@ -57,31 +55,29 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logoutUser = async () => {
-    const body = { refreshToken: authTokens?.refreshToken };
-    await api.delete('/user/logout', { data: body });
+    await api.delete('/user/logout', { data: { refreshToken: authTokens?.refreshToken } });
 
     setAuthTokens(null);
     setUser(null);
-    localStorage.removeItem('authTokens');
+    removeLocalStorage('authTokens');
   };
 
-  const updateToken = async () => {
-    try {
-      const body = { refreshToken: authTokens?.refreshToken };
-      const res = await api.post('/user/refresh', body);
-      const { data } = res;
+  // const updateToken = async () => {
+  //   try {
+  //     const res = await api.post('/user/refresh', { refreshToken: authTokens?.refreshToken });
+  //     const { data } = res;
 
-      setAuthTokens(data);
-      localStorage.setItem('authTokens', JSON.stringify(data));
+  //     setAuthTokens(data);
+  //     setLocalStorage('authTokens', data);
 
-      const decodedPayload = jwt_decode(data.accessToken);
-      setUser(decodedPayload.user_id);
-    } catch (error) {
-      await logoutUser();
-    }
+  //     const tokenPayload = jwt_decode(data.accessToken);
+  //     setUser(tokenPayload.user_id);
+  //   } catch (error) {
+  //     await logoutUser();
+  //   }
 
-    if (loading) setLoading(false);
-  };
+  //   if (loading) setLoading(false);
+  // };
 
   const contextData = {
     user,
@@ -89,21 +85,15 @@ export const AuthProvider = ({ children }) => {
     loginUser,
     registerUser,
     logoutUser,
-    updateToken,
+    // updateToken,
   };
 
   useEffect(() => {
-    if (loading) {
-      if (authTokens) updateToken();
-      if (!authTokens) setLoading(false);
+    if (authTokens) {
+      const { user_id } = jwt_decode(authTokens.accessToken);
+      setUser(user_id);
     }
-
-    const expireTime = 1000 * 10; // 4 minutes (1 minute less than in backend)
-    const interval = setInterval(() => {
-      if (authTokens) updateToken();
-    }, expireTime);
-
-    return () => clearInterval(interval);
+    setLoading(false);
   }, [authTokens, loading]);
 
   return (
