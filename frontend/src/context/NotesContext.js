@@ -1,10 +1,13 @@
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
-import api, { apiProtected } from 'axiosInstance';
+import api from 'axiosInstance';
+import useApiProtected from 'utils/useApiProtected';
 
 const NotesContext = React.createContext();
 
 const NotesProvider = ({ children }) => {
+  const apiProtected = useApiProtected();
+
   // CONST
   const GET_ALL_NOTES = 'GET_ALL_NOTES';
   const ADD_NOTE = 'ADD_NOTE';

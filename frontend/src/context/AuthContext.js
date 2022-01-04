@@ -2,7 +2,7 @@ import { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { getLocalStorage, setLocalStorage, removeLocalStorage } from 'utils/helpers';
-import api, { apiProtected } from 'axiosInstance';
+import api from 'axiosInstance';
 import jwt_decode from 'jwt-decode';
 
 const AuthContext = createContext();
@@ -82,6 +82,8 @@ export const AuthProvider = ({ children }) => {
   const contextData = {
     user,
     authTokens,
+    setUser,
+    setAuthTokens,
     loginUser,
     registerUser,
     logoutUser,
