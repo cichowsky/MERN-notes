@@ -18,8 +18,6 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const updateAuthState = (tokens) => {
-    console.log('aktaualizejszyn');
-
     setAuthTokens(tokens);
     setLocalStorage('authTokens', tokens);
 

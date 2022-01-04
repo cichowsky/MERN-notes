@@ -5,7 +5,7 @@ import useApiProtected from 'utils/useApiProtected';
 
 const NotesContext = React.createContext();
 
-const NotesProvider = ({ children }) => {
+export const NotesProvider = ({ children }) => {
   const apiProtected = useApiProtected();
 
   // CONST
@@ -99,4 +99,4 @@ NotesProvider.propTypes = {
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
 };
 
-export { NotesContext, NotesProvider };
+export default NotesContext;

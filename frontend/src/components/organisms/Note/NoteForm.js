@@ -1,5 +1,5 @@
 import { useEffect, useContext } from 'react';
-import { NotesContext } from 'context/NotesContext';
+import NotesContext from 'context/NotesContext';
 import PropTypes from 'prop-types';
 import Input from 'components/atoms/Input/Input';
 import Button from 'components/atoms/Button/Button';
@@ -34,6 +34,7 @@ const NoteForm = ({ editedNote, closeForm }) => {
 
     if (editedNote) {
       noteData._id = editedNoteId;
+      noteData._author_id = editedNote._author_id;
       await editNote(noteData);
     } else {
       await addNote(noteData);
@@ -83,6 +84,7 @@ const NoteForm = ({ editedNote, closeForm }) => {
 
 NoteForm.propTypes = {
   editedNote: PropTypes.shape({
+    _author_id: PropTypes.string.isRequired,
     _id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     body: PropTypes.string.isRequired,

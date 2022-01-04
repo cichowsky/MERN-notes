@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { NotesContext } from 'context/NotesContext';
+import NotesContext from 'context/NotesContext';
 import MainTemplate from 'components/templates/MainTemplate';
 import Button from 'components/atoms/Button/Button';
 import Note from 'components/organisms/Note/Note';
@@ -17,8 +17,6 @@ const NotesListView = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (notes.length) return;
-
     const getNotes = async () => {
       setLoading(true);
       await getAllNotes();
