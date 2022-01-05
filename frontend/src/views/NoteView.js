@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import NotesContext from 'context/NotesContext';
 import { useParams } from 'react-router-dom';
+import usePageTitle from 'hooks/usePageTitle';
 import MainTemplate from 'components/templates/MainTemplate';
 import Note from 'components/organisms/Note/Note';
 import Alert from 'components/atoms/Alert/Alert';
@@ -8,6 +9,7 @@ import Loader from 'components/atoms/Loader/Loader';
 import Redirection from 'components/atoms/Redirection/Redirection';
 
 const NoteView = () => {
+  usePageTitle('Note');
   const { id } = useParams();
   const { notesState, notesActions } = useContext(NotesContext);
   const { notes } = notesState;

@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import AuthContext from 'context/AuthContext';
+import usePageTitle from 'hooks/usePageTitle';
 import useForm from 'hooks/useForm';
 import Input from 'components/atoms/Input/Input';
 import Button from 'components/atoms/Button/Button';
@@ -9,6 +10,8 @@ import Modal from 'components/organisms/Modal/Modal';
 const AuthForm = ({ isRegisterForm }) => {
   const { loginUser, registerUser } = useContext(AuthContext);
   const [message, setMessage] = useState(null);
+
+  usePageTitle(isRegisterForm ? 'Register' : 'Log in', [isRegisterForm]);
 
   const initialValues = {
     email: '',

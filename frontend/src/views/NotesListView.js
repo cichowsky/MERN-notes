@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import NotesContext from 'context/NotesContext';
+import usePageTitle from 'hooks/usePageTitle';
 import MainTemplate from 'components/templates/MainTemplate';
 import Button from 'components/atoms/Button/Button';
 import Note from 'components/organisms/Note/Note';
@@ -9,6 +10,7 @@ import useModal from 'components/organisms/Modal/useModal';
 import Loader from 'components/atoms/Loader/Loader';
 
 const NotesListView = () => {
+  usePageTitle('Notes list');
   const { notesState, notesActions } = useContext(NotesContext);
   const { notes } = notesState;
   const { getAllNotes } = notesActions;
