@@ -5,6 +5,7 @@ import PrivateRoute from 'utils/PrivateRoute';
 import NotesListView from 'views/NotesListView';
 import NoteView from 'views/NoteView';
 import AuthView from 'views/AuthView';
+import NotFoundView from 'views/NotFoundView';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
             />
             <Route path="/notes/:id" element={<NoteView />} />
             <Route path="/auth/*" element={<AuthView />} />
+            <Route path="*" element={<NotFoundView />} />
           </Routes>
         </NotesProvider>
       </AuthProvider>
