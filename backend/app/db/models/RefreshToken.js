@@ -12,12 +12,11 @@ const RefreshTokenSchema = new Schema({
     type: String,
     required: true,
   },
-  // TODO: add expire time!
-  // createdAt: {
-  //   type: Date,
-  //   default: Date.now,
-  //   expires: REFRESH_TOKEN_TIME,
-  // },
+  expireAt: {
+    type: Date,
+    default: () => Date.now() + REFRESH_TOKEN_TIME * 1000,
+    index: { expires: REFRESH_TOKEN_TIME },
+  },
 });
 
 const RefreshToken = mongoose.model("RefreshToken", RefreshTokenSchema);
