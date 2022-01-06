@@ -14,6 +14,7 @@ class NoteController {
 
     try {
       note = await Note.findOne({ _id: id });
+      if (!note) return res.status(404).json({ message: "Note not found!" });
     } catch (error) {
       if (error.name === "CastError") {
         error.message = "Note not found!"; // todo: move to user model
