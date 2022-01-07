@@ -53,7 +53,7 @@ const AuthForm = ({ isRegisterForm }) => {
 
   const register = async (userData) => {
     const [data, error] = await registerUser(userData);
-    if (data) setMessage({ text: data.message, color: 'green' });
+    if (data) setMessage({ text: data.message, variant: 'success' });
     if (error) setMessage({ text: error });
   };
 
@@ -85,6 +85,7 @@ const AuthForm = ({ isRegisterForm }) => {
       <h2 className="text-3xl font-semibold mb-4">{isRegisterForm ? 'Register' : 'Log in'}</h2>
 
       <Input
+        type="email"
         label="E-mail"
         name="email"
         placeholder="nick@mail.com"
@@ -123,7 +124,13 @@ const AuthForm = ({ isRegisterForm }) => {
 
       {message && (
         <Modal handleClose={() => setMessage(null)}>
-          <span className={`font-semibold text-${message.color || 'red'}-600`}>{message.text}</span>
+          <span
+            className={`font-semibold ${
+              message.variant === 'success' ? 'text-green-600' : 'text-red-600'
+            }`}
+          >
+            {message.text}
+          </span>
         </Modal>
       )}
     </form>

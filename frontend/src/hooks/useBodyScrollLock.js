@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react/cjs/react.development';
+import { useRef, useCallback } from 'react';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 
 const useBodyScrollLock = () => {
