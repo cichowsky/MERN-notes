@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const MainTemplate = ({ title, children }) => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gradient-to-tl from-gray-50 to-gray-100">
       <Header />
 
       <main className="px-4 py-6 max-w-2xl w-full flex-grow self-center ">

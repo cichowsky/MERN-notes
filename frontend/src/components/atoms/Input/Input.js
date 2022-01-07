@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 
+const colors = {
+  red: 'text-red-600 placeholder-red-600 border-red-500 focus:ring-red-200',
+  gray: 'text-gray-800 placeholder-gray-400 border-gray-300 focus:ring-gray-200',
+};
+
 const Input = ({ label, name, errorMessage = '', textarea, ...props }) => {
   const TagInput = textarea ? 'textarea' : 'input';
   const variant = errorMessage ? 'red' : 'gray';
-  const textInt = errorMessage ? '600' : '800';
-  const placeholderInt = errorMessage ? '600' : '400';
-  const borderInt = errorMessage ? '500' : '300';
 
   return (
     <>
@@ -20,15 +22,13 @@ const Input = ({ label, name, errorMessage = '', textarea, ...props }) => {
         name={name}
         type="text"
         className={
-          `px-4 py-2 w-full rounded-lg border text-${variant}-${textInt} ` +
-          `placeholder-${variant}-${placeholderInt} border-${variant}-${borderInt} ` +
-          `focus:outline-none focus:ring focus:ring-${variant}-200` +
+          `px-4 py-2 w-full rounded-lg border focus:outline-none focus:ring ${colors[variant]}` +
           `${textarea ? ' h-40 align-top' : ''}`
         }
         {...props}
       />
 
-      <div className={`mt-1 h-5 text-sm text-right text-${variant}-600`}>{errorMessage}</div>
+      <div className="mt-1 h-5 text-sm text-right text-red-600">{errorMessage}</div>
     </>
   );
 };

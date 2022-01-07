@@ -27,11 +27,11 @@ const Note = ({ _author_id, _id, title, body, isCard }) => {
 
       {_author_id === user && (
         <div className="flex justify-end gap-3">
-          <Button color="purple" onClick={handleOpenFormModal}>
+          <Button bg="purple" onClick={handleOpenFormModal}>
             Edit
           </Button>
 
-          <Button onClick={handleOpenConfirmModal} color="pink">
+          <Button onClick={handleOpenConfirmModal} bg="pink">
             Delete
           </Button>
         </div>
@@ -48,10 +48,10 @@ const Note = ({ _author_id, _id, title, body, isCard }) => {
 
       {_author_id === user && (
         <div className="flex gap-4">
-          <Button color="purple" isBig onClick={handleOpenFormModal}>
+          <Button bg="purple" isBig onClick={handleOpenFormModal}>
             Edit note
           </Button>
-          <Button onClick={handleOpenConfirmModal} color="pink" isBig>
+          <Button onClick={handleOpenConfirmModal} bg="pink" isBig>
             Delete note
           </Button>
         </div>
@@ -78,7 +78,7 @@ const Note = ({ _author_id, _id, title, body, isCard }) => {
             Do You confirm deletion of this note?
           </h2>
           <div className="flex justify-end gap-3">
-            <Button onClick={handleCloseConfirmModal} color="gray">
+            <Button onClick={handleCloseConfirmModal} bg="gray">
               No
             </Button>
             <Button
@@ -87,7 +87,7 @@ const Note = ({ _author_id, _id, title, body, isCard }) => {
                 handleCloseConfirmModal();
                 if (!isCard) navigate('/notes');
               }}
-              color="blue"
+              bg="blue"
             >
               Yes
             </Button>
