@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import NotesContext from 'context/NotesContext';
 import PropTypes from 'prop-types';
 import Input from 'components/atoms/Input/Input';
@@ -8,6 +8,7 @@ import useForm from 'hooks/useForm';
 const NoteForm = ({ editedNote, closeForm }) => {
   const { notesActions } = useContext(NotesContext);
   const { addNote, editNote } = notesActions;
+  const [loading, setLoading] = useState(false);
 
   const editedNoteId = editedNote?._id;
 
@@ -32,6 +33,7 @@ const NoteForm = ({ editedNote, closeForm }) => {
       body: values.description,
     };
 
+    setLoading(true);
     if (editedNote) {
       noteData._id = editedNoteId;
       noteData._author_id = editedNote._author_id;
@@ -39,6 +41,7 @@ const NoteForm = ({ editedNote, closeForm }) => {
     } else {
       await addNote(noteData);
     }
+    setLoading(false);
     closeForm();
   };
 
@@ -74,7 +77,7 @@ const NoteForm = ({ editedNote, closeForm }) => {
         errorMessage={errors.description}
       />
       <div className="flex justify-end gap-3 mt-2">
-        <Button type="submit" isBig disabled={isSubmitButtonDisabled}>
+        <Button type="submit" isBig disabled={isSubmitButtonDisabled} loading={loading}>
           {editedNoteId ? 'Save note' : 'Add note'}
         </Button>
       </div>

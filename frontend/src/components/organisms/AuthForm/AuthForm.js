@@ -10,6 +10,7 @@ import Modal from 'components/organisms/Modal/Modal';
 const AuthForm = ({ isRegisterForm }) => {
   const { loginUser, registerUser } = useContext(AuthContext);
   const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   usePageTitle(isRegisterForm ? 'Register' : 'Log in', [isRegisterForm]);
 
@@ -52,13 +53,17 @@ const AuthForm = ({ isRegisterForm }) => {
   };
 
   const register = async (userData) => {
+    setLoading(true);
     const [data, error] = await registerUser(userData);
+    setLoading(false);
     if (data) setMessage({ text: data.message, variant: 'success' });
     if (error) setMessage({ text: error });
   };
 
   const login = async (userData) => {
+    setLoading(true);
     const [error] = await loginUser(userData);
+    setLoading(false);
     if (error) setMessage({ text: error });
   };
 
@@ -117,7 +122,7 @@ const AuthForm = ({ isRegisterForm }) => {
         />
       )}
       <div className="flex justify-end mt-2">
-        <Button type="submit" isBig disabled={isSubmitButtonDisabled}>
+        <Button type="submit" isBig disabled={isSubmitButtonDisabled} loading={loading}>
           {isRegisterForm ? 'Register' : 'Log in'}
         </Button>
       </div>

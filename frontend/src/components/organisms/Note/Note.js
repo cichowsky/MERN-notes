@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import NotesContext from 'context/NotesContext';
 import AuthContext from 'context/AuthContext';
@@ -12,11 +12,20 @@ const Note = ({ _author_id, _id, title, body, isCard }) => {
   const { user } = useContext(AuthContext);
   const { notesActions } = useContext(NotesContext);
   const { deleteNote } = notesActions;
+  const [deletionLoading, setDeletionLoading] = useState(false);
 
   const [isFormModalOpen, handleOpenFormModal, handleCloseFormModal] = useModal(false);
   const [isConfirmModalOpen, handleOpenConfirmModal, handleCloseConfirmModal] = useModal(false);
 
   const navigate = useNavigate();
+
+  const handleDeleteNote = async () => {
+    setDeletionLoading(true);
+    await deleteNote(_id);
+    setDeletionLoading(false);
+    handleCloseConfirmModal();
+    if (!isCard) navigate('/notes');
+  };
 
   const NoteCard = (
     <div className="p-4 mb-4 bg-white shadow-md rounded-lg">
@@ -75,20 +84,13 @@ const Note = ({ _author_id, _id, title, body, isCard }) => {
       {isConfirmModalOpen && (
         <Modal handleClose={handleCloseConfirmModal}>
           <h2 className="text-gray-800 text-2xl font-semibold mb-4">
-            Do You confirm deletion of this note?
+            {!deletionLoading ? 'Do You confirm deletion of this note?' : 'Note is deleting...'}
           </h2>
           <div className="flex justify-end gap-3">
-            <Button onClick={handleCloseConfirmModal} bg="gray">
+            <Button onClick={handleCloseConfirmModal} bg="gray" disabled={deletionLoading}>
               No
             </Button>
-            <Button
-              onClick={() => {
-                deleteNote(_id);
-                handleCloseConfirmModal();
-                if (!isCard) navigate('/notes');
-              }}
-              bg="blue"
-            >
+            <Button onClick={handleDeleteNote} bg="blue" loading={deletionLoading}>
               Yes
             </Button>
           </div>
